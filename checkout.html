@@ -1,0 +1,32 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Checkout (demo) — Fernline Media</title><link rel="icon" href="images/favicon.svg"><link rel="stylesheet" href="css/style.css"></head>
+<body data-page="cart">
+<section class="page-head"><div class="container"><span class="eyebrow">Checkout</span><h1 style="font-size:clamp(2rem,4vw,3rem)">Checkout <span style="font-size:.5em;color:var(--accent)">DEMO</span></h1></div></section>
+<section style="padding-bottom:70px"><div class="container">
+ <div class="notice"><b>This is a demo checkout.</b> No payment is processed and no card data is collected or sent anywhere. In production, <b>Stripe Checkout / Stripe Payment Element</b> would plug in here (a small serverless function creates the Checkout Session; Stripe webhooks then unlock downloads and email the license certificate).</div>
+ <div class="cart-layout">
+  <div>
+   <div class="notice ok" id="done" hidden><b>Demo order placed!</b> In a live store you'd now get your full-resolution downloads and a PDF license certificate by email. Your cart has been cleared. <a href="gallery.html">Keep browsing →</a></div>
+   <form id="co" class="contact-card">
+    <h3>Licensee details</h3>
+    <div class="two"><div class="field"><label>Full name</label><input required placeholder="Jane Rivera"></div><div class="field"><label>Work email</label><input type="email" required placeholder="jane@company.com"></div></div>
+    <div class="two"><div class="field"><label>Business / licensee name</label><input required placeholder="Blue Ridge Outfitters LLC"></div><div class="field"><label>Business type</label><select><option>Outfitter / guide service</option><option>Resort / lodge</option><option>Tourism board</option><option>Gear retailer</option><option>Marketing agency (for a client)</option><option>Other</option></select></div></div>
+    <div class="field"><label>Intended use (helps us confirm the right license)</label><input placeholder="e.g. Website hero + spring Instagram campaign"></div>
+    <h3 style="margin-top:22px">Payment</h3>
+    <div class="stripe-box"><b>Stripe Payment Element goes here</b><div style="font-size:.85rem;color:var(--muted)">Cards, Apple Pay, Google Pay, Link — handled by Stripe; card data never touches our servers.</div><div class="fake">•••• •••• •••• 4242 &nbsp; MM/YY &nbsp; CVC — disabled in demo</div></div>
+    <label style="display:flex;gap:10px;align-items:flex-start;font-weight:500;margin-top:16px"><input type="checkbox" required style="width:auto;margin-top:4px">I agree to the Fernline Media license terms (demo).</label>
+    <button class="btn block accent" style="margin-top:18px" type="submit" id="payBtn">Place demo order</button>
+   </form>
+  </div>
+  <aside class="summary" id="sum"></aside>
+ </div></div></section>
+<script src="js/data.js"></script><script src="js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+ const c=TL.cart.get();
+ const rows=c.map(i=>{const name=i.type==="plan"?`${TL.PLANS[i.id].name} plan (${i.billing})`:`${TL.photoById(i.id)?.title} · ${TL.LICENSES[i.license].name}`;return `<div class="line"><span>${name}</span><span>${TL.money(TL.cart.lineTotal(i))}</span></div>`}).join("");
+ document.getElementById("sum").innerHTML=`<h3>Order</h3>${rows||'<p style="color:var(--muted)">Cart is empty — <a href="gallery.html">add photos</a>.</p>'}<div class="line total"><span>Total</span><span>${TL.money(TL.cart.total())}</span></div><p style="font-size:.8rem;color:var(--muted)">Sales tax would be calculated by Stripe Tax in production.</p>`;
+ if(!c.length)document.getElementById("payBtn").disabled=true;
+ document.getElementById("co").addEventListener("submit",e=>{e.preventDefault();TL.cart.clear();e.target.hidden=true;document.getElementById("done").hidden=false;document.getElementById("sum").innerHTML='<h3>Order</h3><p style="color:var(--muted)">Demo order complete.</p>'});
+});
+</script></body></html>

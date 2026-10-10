@@ -1,0 +1,59 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pricing & plans — Fernline Media</title><link rel="icon" href="images/favicon.svg"><link rel="stylesheet" href="css/style.css"></head>
+<body data-page="pricing">
+<section class="page-head" style="text-align:center"><div class="container">
+ <span class="eyebrow">Pricing</span><h1 style="font-size:clamp(2rem,4vw,3rem)">Simple pricing for every size of business</h1>
+ <p class="lead" style="margin:0 auto">Buy single images when you need them, or subscribe for a monthly allowance of downloads. All prices in USD (demo pricing).</p>
+ <div class="toggle" role="group" aria-label="Billing period"><button class="on" data-bill="monthly">Monthly</button><button data-bill="annual">Annual · save 20%</button></div>
+</div></section>
+<section style="padding-bottom:70px"><div class="container">
+ <div class="plans" id="plans"></div>
+ <p style="text-align:center;color:var(--muted);font-size:.88rem;margin-top:18px">Unused downloads roll over for one month. Exclusive buyouts are always priced per image.</p>
+</div></section>
+
+<section class="section alt" id="licenses"><div class="container">
+ <span class="eyebrow">Per-image licenses</span><h2>Pay per photo</h2>
+ <p class="lead">No subscription needed. Premium images (marked in the gallery) are priced at the higher rate.</p>
+ <table class="cmp" style="margin-top:26px"><thead><tr><th>License</th><th>Best for</th><th>Standard image</th><th>Premium image</th></tr></thead><tbody id="licRows"></tbody></table>
+ <div class="grid g3" style="margin-top:26px">
+  <div class="value"><h3>✓ Included in every license</h3><p>Perpetual, worldwide use · PDF license certificate · Full-resolution file · Edits &amp; crops allowed.</p></div>
+  <div class="value"><h3>✕ Never allowed</h3><p>Reselling the file itself, use in trademarks/logos, or sensitive-subject use with identifiable people.</p></div>
+  <div class="value"><h3>Need something custom?</h3><p>Broadcast, large print runs or custom shoots — <a href="contact.html">contact sales</a> for a quote.</p></div>
+ </div>
+</div></section>
+
+<section class="section" id="faq"><div class="container" style="max-width:860px">
+ <span class="eyebrow">FAQ</span><h2>Questions businesses ask</h2>
+ <div class="faq" style="margin-top:24px">
+  <details open><summary>What's the difference between Standard and Extended?</summary><p>Standard covers digital use — websites, social media, email and blogs — up to 500,000 impressions. Extended adds print (brochures, posters, packaging, signage) and paid advertising with unlimited impressions.</p></details>
+  <details><summary>What does an Exclusive buyout mean?</summary><p>You get Extended rights and we remove the image from sale. Previous non-exclusive licenses sold before your buyout remain valid; we disclose how many existed before you buy.</p></details>
+  <details><summary>Are people in the photos model-released?</summary><p>Each image shows its release status. Only released images are cleared for advertising use. (In this prototype, release info is a placeholder.)</p></details>
+  <details><summary>Can my agency license on behalf of a client?</summary><p>Yes. Enter your client's business name at checkout and the license certificate is issued to them. Summit Team includes 5 seats for agency staff.</p></details>
+  <details><summary>Do subscription downloads expire?</summary><p>Licenses you've downloaded are perpetual even if you cancel. Unused monthly downloads roll over for one month.</p></details>
+  <details><summary>Can I cancel or change plans?</summary><p>Yes, anytime from your account. Annual plans are billed upfront and can be cancelled at renewal.</p></details>
+  <details><summary>Do you offer refunds?</summary><p>Unused single-image purchases can be refunded within 14 days if the file hasn't been downloaded.</p></details>
+ </div>
+</div></section>
+<script src="js/data.js"></script><script src="js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+ let bill="monthly";
+ const feats={trail:["10 downloads per month","Standard license included","Extended license +$40/image","1 user seat","Email support"],
+  basecamp:["50 downloads per month","Standard + Extended included","Premium images included","3 user seats","Shared team lightbox","Priority support"],
+  summit:["Unlimited downloads (fair use)","Standard + Extended included","Premium images included","5 user seats + client billing","10% off Exclusive buyouts","Dedicated account manager"]};
+ const who={trail:"For small outfitters & shops",basecamp:"For resorts, lodges & growing brands",summit:"For agencies & tourism boards"};
+ function draw(){
+  document.getElementById("plans").innerHTML=Object.entries(TL.PLANS).map(([k,p])=>`<div class="plan ${k==="basecamp"?"featured":""}">${k==="basecamp"?'<span class="pop">Most popular</span>':""}
+   <span class="eyebrow">${who[k]}</span><h3 style="font-size:1.5rem">${p.name}</h3>
+   <div class="amt">${TL.money(bill==="annual"?p.annual:p.monthly)}<small> / month</small></div>
+   <div style="color:var(--muted);font-size:.88rem">${bill==="annual"?`Billed ${TL.money(p.annual*12)} yearly`:"Billed monthly · cancel anytime"}</div>
+   <ul>${feats[k].map(f=>`<li>${f}</li>`).join("")}</ul>
+   <button class="btn ${k==="basecamp"?"":"ghost"} block" data-plan="${k}">Choose ${p.name}</button></div>`).join("");
+ }
+ document.querySelector(".toggle").addEventListener("click",e=>{const b=e.target.closest("[data-bill]");if(!b)return;bill=b.dataset.bill;document.querySelectorAll(".toggle button").forEach(x=>x.classList.toggle("on",x===b));draw()});
+ document.getElementById("plans").addEventListener("click",e=>{const b=e.target.closest("[data-plan]");if(!b)return;TL.cart.addPlan(b.dataset.plan,bill);TL.toast(`${TL.PLANS[b.dataset.plan].name} plan (${bill}) added to cart`);setTimeout(()=>location.href="cart.html",700)});
+ const best={standard:"Websites, social, email",extended:"Print, packaging, paid ads",exclusive:"Brand campaigns, hero imagery"};
+ document.getElementById("licRows").innerHTML=Object.entries(TL.LICENSES).map(([k,l])=>`<tr><td><b>${l.name}</b><br><span style="color:var(--muted);font-size:.85rem">${l.sub}</span></td><td>${best[k]}</td><td><b>${TL.money(l.price[0])}</b></td><td><b>${TL.money(l.price[1])}</b></td></tr>`).join("");
+ draw();
+});
+</script></body></html>

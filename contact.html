@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Contact — Fernline Media</title><link rel="icon" href="images/favicon.svg"><link rel="stylesheet" href="css/style.css"></head>
+<body data-page="contact">
+<section class="section"><div class="container split" style="align-items:start">
+ <div><span class="eyebrow">Contact</span><h1 style="font-size:clamp(2rem,4vw,3rem)">Let's find the right shots for you.</h1>
+ <p class="lead">Questions about licensing, a custom shoot, a team plan, or contributing photos? Send a note.</p>
+ <div class="value" style="margin-top:24px"><p><b>Sales &amp; licensing:</b> hello@fernlinemedia.com<br><b>Photographers:</b> contribute@fernlinemedia.com<br><b>Hours:</b> Mon–Fri, 9am–5pm ET</p><p style="font-size:.8rem;margin-top:10px">Placeholder contact details for the prototype.</p></div></div>
+ <div class="contact-card">
+  <div class="notice ok form-ok" hidden><b>Thanks! (Demo)</b> This form isn't connected yet — in production it would post to a form service (e.g. Formspree, Netlify Forms) or your CRM.</div>
+  <form data-demo>
+   <div class="two"><div class="field"><label>Name</label><input required></div><div class="field"><label>Email</label><input type="email" required></div></div>
+   <div class="field"><label>Company</label><input></div>
+   <div class="field"><label>Topic</label><select id="topic"><option value="sales">Licensing / sales question</option><option value="plan">Team or agency plan</option><option value="custom">Custom shoot / exclusive</option><option value="photographer">I'm a photographer</option><option value="other">Other</option></select></div>
+   <div class="field"><label>Message</label><textarea rows="5" required></textarea></div>
+   <button class="btn block" type="submit">Send message (demo)</button>
+   <p style="font-size:.8rem;color:var(--muted);margin-top:10px">Demo form: nothing is sent or stored.</p>
+  </form>
+ </div>
+</div></section>
+<script src="js/data.js"></script><script src="js/app.js"></script>
+<script>const t=new URLSearchParams(location.search).get("topic");if(t)document.getElementById("topic").value=t;</script>
+</body></html>

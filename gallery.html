@@ -1,0 +1,42 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Browse photos — Fernline Media</title><link rel="icon" href="images/favicon.svg"><link rel="stylesheet" href="css/style.css"></head>
+<body data-page="gallery">
+<section class="page-head"><div class="container">
+ <span class="eyebrow">The library</span><h1 style="font-size:clamp(2rem,4vw,3rem)">Browse outdoor photos</h1>
+ <p class="lead">Click any photo for license options. Prices shown per image; Premium shots are marked.</p>
+</div></section>
+<section style="padding-bottom:60px"><div class="container">
+ <div class="toolbar">
+  <div class="search"><input id="q" type="search" placeholder="Search titles, photographers, keywords (e.g. lake, snow, tent)…" aria-label="Search photos"></div>
+  <select id="sort" aria-label="Sort"><option value="default">Sort: Featured</option><option value="price-asc">Price: low to high</option><option value="price-desc">Price: high to low</option><option value="title">Title A–Z</option></select>
+ </div>
+ <div class="chips" id="chips" style="margin-bottom:22px"></div>
+ <div class="result-count" id="count"></div>
+ <div class="photo-grid" id="grid"></div>
+ <div class="empty" id="empty" hidden>No photos match. Try another activity or keyword.</div>
+</div></section>
+<script src="js/data.js"></script><script src="js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+ const params=new URLSearchParams(location.search);
+ let act=params.get("activity")||"all";
+ const q=document.getElementById("q");q.value=params.get("q")||"";
+ const chips=document.getElementById("chips");
+ const acts=[["all","All"],...Object.entries(TL.ACTIVITIES)];
+ function drawChips(){chips.innerHTML=acts.map(([k,v])=>{const n=k==="all"?PHOTOS.length:PHOTOS.filter(p=>p.activity===k).length;return `<button class="chip ${act===k?"active":""}" data-act="${k}">${v} <span style="opacity:.6">${n}</span></button>`}).join("")}
+ function render(){
+  const term=q.value.trim().toLowerCase();
+  let list=PHOTOS.filter(p=>(act==="all"||p.activity===act)&&(!term||[p.title,p.desc,p.photographer,p.activity,TL.ACTIVITIES[p.activity],p.id,...p.tags].join(" ").toLowerCase().includes(term)));
+  const s=document.getElementById("sort").value;
+  if(s==="price-asc")list.sort((a,b)=>a.premium-b.premium);if(s==="price-desc")list.sort((a,b)=>b.premium-a.premium);if(s==="title")list.sort((a,b)=>a.title.localeCompare(b.title));
+  document.getElementById("grid").innerHTML=list.map(TL.card).join("");
+  document.getElementById("empty").hidden=list.length>0;
+  document.getElementById("count").textContent=`${list.length} photo${list.length===1?"":"s"}${act!=="all"?" in "+TL.ACTIVITIES[act]:""}${term?` matching “${q.value.trim()}”`:""}`;
+  const u=new URLSearchParams();if(act!=="all")u.set("activity",act);if(term)u.set("q",q.value.trim());
+  history.replaceState(null,"",location.pathname+(u.toString()?"?"+u:"")+location.hash);
+ }
+ chips.addEventListener("click",e=>{const b=e.target.closest("[data-act]");if(!b)return;act=b.dataset.act;drawChips();render()});
+ q.addEventListener("input",render);document.getElementById("sort").addEventListener("change",render);
+ drawChips();render();
+});
+</script></body></html>
